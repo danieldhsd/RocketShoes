@@ -1,112 +1,47 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
+
+import api from '../../services/api';
+import { formatPrice } from '../../util/format';
 
 import { ProductList } from './styles';
 
-export default function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-nike-shox-nz-eu-masculino/14/D12-9970-014/D12-9970-014_detalhe2.jpg?ims=326x"
-          alt="Tenis"
-        ></img>
-        <strong>Tênis Nike</strong>
-        <span>350,90</span>
+export default class Home extends Component {
+  state = {
+    products: [],
+  };
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff"></MdAddShoppingCart>3
-          </div>
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+  async componentDidMount() {
+    const response = await api.get('products');
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-nike-shox-nz-eu-masculino/14/D12-9970-014/D12-9970-014_detalhe2.jpg?ims=326x"
-          alt="Tenis"
-        ></img>
-        <strong>Tênis Nike</strong>
-        <span>350,90</span>
+    const data = response.data.map(product => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff"></MdAddShoppingCart>3
-          </div>
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+    this.setState({ products: data });
+  }
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-nike-shox-nz-eu-masculino/14/D12-9970-014/D12-9970-014_detalhe2.jpg?ims=326x"
-          alt="Tenis"
-        ></img>
-        <strong>Tênis Nike</strong>
-        <span>350,90</span>
+  render() {
+    const { products } = this.state;
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff"></MdAddShoppingCart>3
-          </div>
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+    return (
+      <ProductList>
+        {products.map(product => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title}></img>
+            <strong>{product.title}</strong>
+            <span>{product.priceFormatted}</span>
 
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-nike-shox-nz-eu-masculino/14/D12-9970-014/D12-9970-014_detalhe2.jpg?ims=326x"
-          alt="Tenis"
-        ></img>
-        <strong>Tênis Nike</strong>
-        <span>350,90</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff">
-              3
-            </MdAddShoppingCart>
-          </div>
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-nike-shox-nz-eu-masculino/14/D12-9970-014/D12-9970-014_detalhe2.jpg?ims=326x"
-          alt="Tenis"
-        ></img>
-        <strong>Tênis Nike</strong>
-        <span>350,90</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff">
-              3
-            </MdAddShoppingCart>
-          </div>
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://static.netshoes.com.br/produtos/tenis-nike-shox-nz-eu-masculino/14/D12-9970-014/D12-9970-014_detalhe2.jpg?ims=326x"
-          alt="Tenis"
-        ></img>
-        <strong>Tênis Nike</strong>
-        <span>350,90</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff">
-              3
-            </MdAddShoppingCart>
-          </div>
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-    </ProductList>
-  );
+            <button type="button">
+              <div>
+                <MdAddShoppingCart size={16} color="#fff"></MdAddShoppingCart>3
+              </div>
+              <span>ADICIONAR AO CARRINHO</span>
+            </button>
+          </li>
+        ))}
+      </ProductList>
+    );
+  }
 }
